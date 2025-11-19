@@ -8,10 +8,6 @@ from tqdm import tqdm
 import numpy as np
 from sklearn.metrics imfport accuracy_score, classification_report, f1_score
 
-# ===================================================
-# OPTION A: MULTI-CLASS CLASSIFICATION (RECOMMENDED)
-# ===================================================
-
 class LIARDataset(Dataset):
     def __init__(self, texts, labels, subjects, contexts):
         self.texts = texts
@@ -95,10 +91,6 @@ def collate_fn(batch):
         'label': labels
     }
 
-# ===================================================
-# CUSTOM MODEL WITH ORDINAL REGRESSION
-# ===================================================
-
 class RobertaOrdinalClassifier(nn.Module):
     """
     Custom RoBERTa with ordinal regression approach.
@@ -119,18 +111,9 @@ class RobertaOrdinalClassifier(nn.Module):
         logits = self.classifier(pooled_output)
         return logits
 
-# ===================================================
-# TRAINING FUNCTIONS
-# ===================================================
-
 def compute_truthfulness_score(class_probs):
     """
     Convert multi-class probabilities to continuous truthfulness score (0.0 to 1.0)
-    
-    Three approaches available:
-    1. Expected Value: Weighted average of class positions
-    2. Cumulative Probability: Sum probabilities of "truthful" classes
-    3. Sigmoid Transform: Smooth continuous mapping
     
     Args:
         class_probs: Tensor of shape (batch_size, num_classes) with softmax probabilities
@@ -144,29 +127,6 @@ def compute_truthfulness_score(class_probs):
     class_values = torch.tensor([0.0, 0.2, 0.4, 0.6, 0.8, 1.0], device=class_probs.device)
     truthfulness = torch.sum(class_probs * class_values, dim=1)
     
-    return truthfulness
-
-def compute_truthfulness_score_cumulative(class_probs):
-    """
-    Alternative: Cumulative probability approach
-    Score = P(mostly-true) + P(true) + 0.5 * P(half-true)
-    """
-    # Weight classes by truthfulness contribution
-    weights = torch.tensor([0.0, 0.0, 0.1, 0.3, 0.8, 1.0], device=class_probs.device)
-    truthfulness = torch.sum(class_probs * weights, dim=1)
-    return truthfulness
-
-def compute_truthfulness_score_sigmoid(class_probs):
-    """
-    Alternative: Sigmoid-transformed expected class
-    Smooth transformation centered at "half-true" (class 3)
-    """
-    # Calculate expected class (0-5)
-    class_positions = torch.arange(6, dtype=torch.float32, device=class_probs.device)
-    expected_class = torch.sum(class_probs * class_positions, dim=1)
-    
-    # Transform to [0, 1] with sigmoid centered at class 3 (half-true)
-    truthfulness = torch.sigmoid((expected_class - 2.5) / 1.5)
     return truthfulness
 
 def compute_class_weights(train_labels):
