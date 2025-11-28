@@ -4,3 +4,7 @@ scikit-learn
 transformers
 ipywidgets
 numpy
+matplotlib
+seaborn
+plotly
+kaleido

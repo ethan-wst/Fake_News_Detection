@@ -6,7 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 from transformers import RobertaTokenizer, RobertaModel, RobertaForSequenceClassification, get_linear_schedule_with_warmup
 from tqdm import tqdm
 import numpy as np
-from sklearn.metrics imfport accuracy_score, classification_report, f1_score
+from sklearn.metrics import accuracy_score, classification_report, f1_score
 
 class LIARDataset(Dataset):
     def __init__(self, texts, labels, subjects, contexts):
