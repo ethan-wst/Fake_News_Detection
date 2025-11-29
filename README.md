@@ -1,6 +1,8 @@
 # LIAR: Fake News Detection
 
-This repository contains code and notebooks for a fake news detection project in TXST CS4371 using the LIAR dataset and RoBERTa transformer models.
+This repository contains Jupyter notebooks and Python code used for a fake news detection project in TXST CS4371 Computer System Security. The purpose of this project is to improve the performance and accuracy of the legacy code's fake news detection using the LIAR dataset and RoBERTa transformer models.
+
+Contributors: Ethan West, Andrew Sikes, Elham Islam, Trinity Boston
 
 ## Contents
 
@@ -10,13 +12,10 @@ This repository contains code and notebooks for a fake news detection project in
 - `legacy_code/` — older scripts from original repo for reference
   - `classifier.py` — example classifier script
   - `prediction.py` — example prediction script
+  - `front.py` — front end code
+  - `final-fnd.py` — JSON
 
 ## Prerequisites
-
-Install requirements:
-```bash
-pip install -r requirements.txt
-```
 
 Required packages include:
 - PyTorch
@@ -25,10 +24,16 @@ Required packages include:
 - scikit-learn
 - tqdm
 
+## Installation
+Install all packages:
+```bash
+pip install -r requirements.txt
+```
+
 ## Model Architecture
 
 ### RoBERTa Ordinal Classifier
-The model uses a fine-tuned RoBERTa-base transformer with a custom classification head designed for ordinal classification across 6 truthfulness categories:
+The model uses a fine-tuned RoBERTa-base transformer with a custom classification head designed for ordinal classification across 6 truthfulness categories to accurately categorize news articles:
 
 1. **pants-fire** (0) - Completely false
 2. **false** (1) - Mostly false
