@@ -6,6 +6,7 @@ This repository contains code and notebooks for a fake news detection project in
 
 - `demo.ipynb` — main demo notebook, showcasing data processing, inference, and ingress gate features
 - `training.py` — script for training the RoBERTa transformer model with ordinal classification
+- `visualization_dash.py` — comprehensive visualization and analysis dashboard
 - `liar_dataset/` — expected location for LIAR dataset TSV files (`train.tsv`, `valid.tsv`, `test.tsv`)
 - `legacy_code/` — older scripts from original repo for reference
   - `classifier.py` — example classifier script
@@ -24,6 +25,9 @@ Required packages include:
 - pandas
 - scikit-learn
 - tqdm
+- plotly
+- matplotlib
+- seaborn
 
 ## Model Architecture
 
@@ -97,6 +101,45 @@ The `demo.ipynb` notebook provides:
 - Multiple accuracy metrics (exact, ±1 class, ±2 classes)
 - CSV export of predictions with scores
 
+
+## Visualization Dashboard
+
+### Quick Start
+```bash
+python visualization_dashboard.py
+```
+
+The visualization dashboard generates comprehensive analysis of model performance, including:
+
+### Generated Outputs (11 files)
+
+**Static Visualizations (8 PNG files):**
+1. `confusion_matrix.png` - 6×6 classification performance matrix
+2. `gate_confusion_matrix.png` - 3-tier KEEP/REVIEW/REJECT system validation
+3. `score_distributions.png` - Truthfulness score histograms by true label
+4. `score_violin.png` - Violin plot showing score distributions with threshold boundaries
+5. `calibration_curve.png` - Model calibration analysis (6 classes)
+6. `threshold_analysis.png` - **Key for ingress gate**: 4-panel threshold optimization analysis
+7. `error_analysis.png` - Error patterns and ordinal accuracy metrics
+8. `subject_analysis.png` - Performance breakdown by topic/subject
+
+**Interactive Dashboard:**
+9. `dashboard.html` - Interactive Plotly visualizations (open in browser)
+
+**Data Files:**
+10. `detailed_predictions.csv` - Complete predictions with scores for all test samples
+11. `threshold_analysis.csv` - Pre-computed results for 100+ threshold configurations
+
+### Key Insights from Dashboard
+
+The visualization dashboard reveals:
+- **Ordinal Structure**: 56% accuracy within ±1 class, 78% within ±2 classes
+- **Score Alignment**: Fake news scores cluster at 0.0-0.4, real news at 0.6-1.0
+- **Optimal Thresholds**: Keep≥0.75, Reject≤0.35 achieves ~72% automation
+- **Automation Potential**: 72% of decisions can be automated with 85% accuracy
+- **Performance Variation**: Some topics (e.g., healthcare) are easier than others
+
+
 ## Model Interpretability
 
 ### Understanding Predictions
@@ -154,6 +197,8 @@ We focus on **statement**, **subject**, and **context** because:
 - [x] Truthfulness scoring system (0.0 to 1.0)
 - [x] Comprehensive inference notebook
 - [x] Evaluation metrics and analysis
+- [x] Create visualization dashboard for score distributions
+
 
 
 
@@ -162,7 +207,6 @@ We focus on **statement**, **subject**, and **context** because:
 - [ ] Implement ingress gate based on truthfulness score
 - [ ] Further data analysis on misclassifications
 - [ ] Hyperparameter tuning for improved accuracy
-- [ ] Create visualization dashboard for score distributions
 - [ ] More?
 
 
