@@ -109,18 +109,6 @@ The trained model saves to `best_liar_model.pt` and can generate:
 2. **Class probabilities**: Confidence across all 6 classes
 3. **Truthfulness score**: Continuous value from 0.0 (false) to 1.0 (true)
 
-## Running Inference
-
-Use the provided `demo.ipynb` notebook for batch inference, pretrained [model](https://drive.google.com/drive/folders/1TZmK_MFVFX90dVSA_1U4gZ258-ll-z7p?usp=sharing) is available
-
-### Inference Notebook Features
-The `demo.ipynb` notebook provides:
-- Batch processing of test dataset
-- Detailed probability distributions for each prediction
-- Statistical analysis of truthfulness scores by true label
-- Multiple accuracy metrics (exact, ±1 class, ±2 classes)
-- CSV export of predictions with scores
-
 ## Model Interpretability
 
 ### Understanding Predictions
