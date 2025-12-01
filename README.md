@@ -69,17 +69,17 @@ score = sum(probability[i] * class_values[i] for all classes)
 
 This provides a smooth, interpretable score that reflects both the prediction and model confidence.
 
-## Running Inference
+## Running Inference and Ingress Gate
 
-Use the provided `demo.ipynb` notebook for batch inference, pretrained [model](https://drive.google.com/drive/folders/1TZmK_MFVFX90dVSA_1U4gZ258-ll-z7p?usp=sharing) is available
+Use the provided `demo.ipynb` notebook for batch inference and ingress gate demo, pretrained [model](https://drive.google.com/drive/folders/1TZmK_MFVFX90dVSA_1U4gZ258-ll-z7p?usp=sharing) is available
 
-### Inference Notebook Features
+### Notebook Features
 The `demo.ipynb` notebook provides:
 - Batch processing of test dataset
 - Detailed probability distributions for each prediction
-- Statistical analysis of truthfulness scores by true label
-- Multiple accuracy metrics (exact, ±1 class, ±2 classes)
-- CSV export of predictions with scores
+- Gate mechanism with user defined thresholds
+- Automatic dataset partitioning
+- Data visualization
 
 ## Training the Model
 
