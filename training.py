@@ -1,7 +1,7 @@
 """
 Fake News Detection Training Script
 ===================================
-This script trains a RoBERTa-based model for detecting fake news using the LIAR dataset.
+Trains a RoBERTa-based model for detecting fake news using the LIAR dataset.
 The model treats truthfulness as an ordinal classification problem with 6 classes:
 pants-fire, false, barely-true, half-true, mostly-true, and true.
 """
@@ -19,10 +19,10 @@ from sklearn.metrics import accuracy_score, classification_report, f1_score
 
 class LIARDataset(Dataset):
     """
-    The purpose of this class is to wrap the LIAR dataset to make it compatible with PyTorch's Dataloader
+    Wraps the LIAR dataset to make it compatible with PyTorch's Dataloader
     It stores statements, truthfulness labels, subjects and contexts.
     """
-    def __init__(self, texts, labels, subjects, contexts): #Initializes dataset with all required components
+    def __init__(self, texts, labels, subjects, contexts):
         self.texts = texts
         self.labels = labels
         self.subjects = subjects
@@ -42,11 +42,11 @@ class LIARDataset(Dataset):
 
 def load_liar_data(file_path):
     """
-    This function loads and preprocesses the LIAR datset from a TSV file
+    Loads and preprocesses the LIAR datset from a TSV file
     Extracts the relevant columns and performes necessary preprocessing
     """
 
-    #Load LIAR dataset with proper label encoding by reading TSV file
+    # Load LIAR dataset with proper label encoding by reading TSV file
     df = pd.read_csv(
         file_path,
         sep='\t',
@@ -79,13 +79,8 @@ tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
 
 def collate_fn(batch):
     """
-    Custom collate function for batching data samples.
+    Collate function for batching data samples.
     Tokenize with structured metadata using special tokens
-    
-    This function is called by DataLoader to combine multiple samples into a batch.
-    It tokenizes the text inputs and structures them with subject and context information.
-    The function also handles variable-length inputs by padding them to a fixed length.
-
     """
     # Extract each component from the batch
     texts = [item['text'] for item in batch]
@@ -124,11 +119,11 @@ def collate_fn(batch):
 class RobertaOrdinalClassifier(nn.Module):
     """
     Custom RoBERTa-based neural network with ordinal regression approach.
-    Uses cumulative link model for ordered categories.
 
-    This model treats fake news detection as an ordinal regression problem, where
+    Treats fake news detection as an ordinal regression problem, where
     the truthfulness labels have a natural order (pants-fire < false < barely-true < 
     half-true < mostly-true < true).
+
     The model outputs raw logits (unnormalized scores) for each class, which are
     then converted to probabilities using softmax during training/evaluation.
     """
@@ -143,7 +138,7 @@ class RobertaOrdinalClassifier(nn.Module):
     def forward(self, input_ids, attention_mask):
         """
         Forward pass through the model.
-        This method processes input text through the RoBERTa encoder and classification
+        Processes input text through the RoBERTa encoder and classification
         head to produce class predictions.
         """
         outputs = self.roberta(input_ids=input_ids, attention_mask=attention_mask)
@@ -153,30 +148,17 @@ class RobertaOrdinalClassifier(nn.Module):
         return logits
 
 def compute_truthfulness_score(class_probs):
-    """
-    Convert multi-class probabilities to continuous truthfulness score (0.0 to 1.0)
+    """Convert multi-class probabilities to continuous truthfulness score (0.0 to 1.0)"""
     
-    Args:
-        class_probs: Tensor of shape (batch_size, num_classes) with softmax probabilities
-    
-    Returns:
-        Tensor of shape (batch_size,) with truthfulness scores from 0.0 to 1.0
-    """
-    
-    # APPROACH 1: Expected Value (Recommended)
     # Calculate weighted average of class positions normalized to [0, 1]
     class_values = torch.tensor([0.0, 0.2, 0.4, 0.6, 0.8, 1.0], device=class_probs.device)
-    truthfulness = torch.sum(class_probs * class_values, dim=1) #Continuous score that reflects both the predicted class and confidence
+    truthfulness = torch.sum(class_probs * class_values, dim=1)
     
     return truthfulness
 
 def compute_class_weights(train_labels):
-    """
-    Compute class weights for imbalanced dataset
-    In the LIAR dataset, some truthfulness classes may have many more samples than others.
-    This ensures that the sum of all weights equals the number of classes, and
-    rare classes get proportionally higher weights.
-    """
+    """Compute class weights for imbalanced dataset"""
+
     unique, counts = np.unique(train_labels, return_counts=True)
     total = len(train_labels)
     weights = total / (len(unique) * counts)
@@ -302,12 +284,10 @@ def evaluate_model(model, data_loader, device):
 
     return metrics, all_predictions, all_labels, all_truthfulness_scores
 
-# ===================================================
-# MAIN TRAINING LOOP
-# ===================================================
 
 def main():
-    """Main training function that orchestrates the entire training pipeline."""
+    """Main training function for the entire training pipeline."""
+
     # Load data
     print("Loading LIAR dataset...")
     train_df = load_liar_data('liar_dataset/train.tsv')
