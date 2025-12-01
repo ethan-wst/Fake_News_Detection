@@ -1,3 +1,4 @@
 .vscode/
 *.pt
 __pycache__
+*.csv
