@@ -1,14 +1,18 @@
 # LIAR: Fake News Detection
 
-This repository contains Jupyter notebooks and Python code used for a fake news detection project in TXST CS4371 Computer System Security. The purpose of this project is to improve the performance and accuracy of the legacy code's fake news detection using the LIAR dataset and RoBERTa transformer models.
+This repository contains a demo Jupyter notebook and Python code used for a fake news detection project in TXST CS4371 Computer System Security. The purpose of this project is to improve the performance and accuracy of the legacy code's fake news detection using the LIAR dataset and RoBERTa transformer models.
 
-Contributors: Ethan West, Andrew Sikes, Elham Islam, Trinity Boston
+This work is based on the original LIAR dataset [paper](https://arxiv.org/abs/1705.00648) and code by William Yang Wang and focuses on extending the datatset's utility beyond non-machine learning baselines utilizing a transformer neural network. 
+
+Guidance and inspiration were drawn from Hemang Thakar and Brijesh Bhatt [paper](https://www.researchsquare.com/article/rs-4721974/v1) discussing a binary classification approach using roBERTa model
+
+Contributors: Andrew Sikes, Elham Islam, Ethan West, Trinity Boston
+
 
 ## Contents
 
 - `demo.ipynb` — main demo notebook, showcasing data processing, inference, and ingress gate features
 - `training.py` — script for training the RoBERTa transformer model with ordinal classification
-- `visualization_dash.py` — comprehensive visualization and analysis dashboard
 - `liar_dataset/` — expected location for LIAR dataset TSV files (`train.tsv`, `valid.tsv`, `test.tsv`)
 - `legacy_code/` — older scripts from original repo for reference
   - `classifier.py` — example classifier script
@@ -18,18 +22,19 @@ Contributors: Ethan West, Andrew Sikes, Elham Islam, Trinity Boston
 
 ## Prerequisites
 
-Required packages include:
-- PyTorch
-- Transformers (HuggingFace)
+### Required packages
 - pandas
+- torch
 - scikit-learn
-- tqdm
-- plotly
+- transformers
+- ipywidgets
+- numpy
 - matplotlib
 - seaborn
+- plotly
+- kaleido
 
-## Installation
-Install all packages:
+### Installation
 ```bash
 pip install -r requirements.txt
 ```
@@ -64,6 +69,18 @@ score = sum(probability[i] * class_values[i] for all classes)
 
 This provides a smooth, interpretable score that reflects both the prediction and model confidence.
 
+## Running Inference
+
+Use the provided `demo.ipynb` notebook for batch inference, pretrained [model](https://drive.google.com/drive/folders/1TZmK_MFVFX90dVSA_1U4gZ258-ll-z7p?usp=sharing) is available
+
+### Inference Notebook Features
+The `demo.ipynb` notebook provides:
+- Batch processing of test dataset
+- Detailed probability distributions for each prediction
+- Statistical analysis of truthfulness scores by true label
+- Multiple accuracy metrics (exact, ±1 class, ±2 classes)
+- CSV export of predictions with scores
+
 ## Training the Model
 
 ### Quick Start
@@ -86,8 +103,6 @@ python training.py
 - **Accuracy ±2 classes**: 85-90%
 - **Macro F1**: 0.25-0.35
 
-*Note: The LIAR dataset is notoriously difficult. Exact accuracy of ~27% is significantly better than random chance (16.67%) and comparable to human performance on this task.*
-
 ### Model Output
 The trained model saves to `best_liar_model.pt` and can generate:
 1. **Class predictions**: Discrete label (0-5)
@@ -105,45 +120,6 @@ The `demo.ipynb` notebook provides:
 - Statistical analysis of truthfulness scores by true label
 - Multiple accuracy metrics (exact, ±1 class, ±2 classes)
 - CSV export of predictions with scores
-
-
-## Visualization Dashboard
-
-### Quick Start
-```bash
-python visualization_dashboard.py
-```
-
-The visualization dashboard generates comprehensive analysis of model performance, including:
-
-### Generated Outputs (11 files)
-
-**Static Visualizations (8 PNG files):**
-1. `confusion_matrix.png` - 6×6 classification performance matrix
-2. `gate_confusion_matrix.png` - 3-tier KEEP/REVIEW/REJECT system validation
-3. `score_distributions.png` - Truthfulness score histograms by true label
-4. `score_violin.png` - Violin plot showing score distributions with threshold boundaries
-5. `calibration_curve.png` - Model calibration analysis (6 classes)
-6. `threshold_analysis.png` - **Key for ingress gate**: 4-panel threshold optimization analysis
-7. `error_analysis.png` - Error patterns and ordinal accuracy metrics
-8. `subject_analysis.png` - Performance breakdown by topic/subject
-
-**Interactive Dashboard:**
-9. `dashboard.html` - Interactive Plotly visualizations (open in browser)
-
-**Data Files:**
-10. `detailed_predictions.csv` - Complete predictions with scores for all test samples
-11. `threshold_analysis.csv` - Pre-computed results for 100+ threshold configurations
-
-### Key Insights from Dashboard
-
-The visualization dashboard reveals:
-- **Ordinal Structure**: 56% accuracy within ±1 class, 78% within ±2 classes
-- **Score Alignment**: Fake news scores cluster at 0.0-0.4, real news at 0.6-1.0
-- **Optimal Thresholds**: Keep≥0.75, Reject≤0.35 achieves ~72% automation
-- **Automation Potential**: 72% of decisions can be automated with 85% accuracy
-- **Performance Variation**: Some topics (e.g., healthcare) are easier than others
-
 
 ## Model Interpretability
 
@@ -192,28 +168,6 @@ We focus on **statement**, **subject**, and **context** because:
 - Reproducible in real-world scenarios
 - Don't require external knowledge about specific speakers
 - Excluded: Speaker name, job, state, party (too sparse/unique for meaningful patterns)
-
-## Current Work
-
-### Completed
-- [x] Data preprocessing and cleaning
-- [x] RoBERTa-based ordinal classification model
-- [x] Training script with early stopping and class balancing
-- [x] Truthfulness scoring system (0.0 to 1.0)
-- [x] Comprehensive inference notebook
-- [x] Evaluation metrics and analysis
-- [x] Create visualization dashboard for score distributions
-
-
-
-
-## Future Work
-
-- [ ] Implement ingress gate based on truthfulness score
-- [ ] Further data analysis on misclassifications
-- [ ] Hyperparameter tuning for improved accuracy
-- [ ] More?
-
 
 
 ## Citation
